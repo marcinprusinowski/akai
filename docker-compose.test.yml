@@ -1,0 +1,22 @@
+version: "3.9"
+services:
+
+  backend:
+    build:
+      context: ./
+      dockerfile: ./docker/Dockerfile
+    environment:
+      - HOST_ADDRESS=http://credit-users:5000
+    entrypoint: ./gradlew test --info -x build
+    links:
+      - "credit-users:credit-users"
+
+    depends_on:
+      - credit-users
+
+  credit-users:
+    build: ./credit-user-api/
+    environment:
+      - HOST_ADDRESS=0.0.0.0
+    ports:
+      - "5001:5000"
